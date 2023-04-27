@@ -44,7 +44,12 @@ module Net
     def connect
       HttpLog.log_connection(@address, @port) if !started? && HttpLog.url_approved?("#{@address}:#{@port}")
 
-      orig_connect
+      begin
+        orig_connect
+      rescue Net::HTTPError, Timeout::Error => e
+        HttpLog.log("Error connecting to #{[@address, @port].compact.join(':')} - #{e.inspect}")
+        raise e
+      end
     end
   end
 end

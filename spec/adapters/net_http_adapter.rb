@@ -22,4 +22,12 @@ class NetHTTPAdapter < HTTPBaseAdapter
   def self.response_string_for(response)
     response.body
   end
+
+  def send_connect
+    Net::HTTP.new(@host, @port).send(:connect)
+  end
+
+  def self.native_adapter_class
+    Net::HTTP
+  end
 end

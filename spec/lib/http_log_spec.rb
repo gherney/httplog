@@ -408,6 +408,17 @@ describe HttpLog do
           end
         end
       end
+
+      context 'connection timeout' do
+        if adapter_class.method_defined? :send_connect
+          before do
+            allow_any_instance_of(adapter_class.native_adapter_class).to receive(:orig_connect).and_raise(Timeout::Error.new)
+            expect{adapter.send_connect}.to raise_error(Timeout::Error)
+          end
+          it { is_expected.to include("Connecting: #{host}:#{port}") }
+          it { is_expected.to include("Error connecting to #{host}:#{port} - #<Timeout::Error: Timeout::Error>") }
+        end
+      end
     end
   end
 end

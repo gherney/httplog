@@ -5,3 +5,5 @@ pkg/
 coverage/
 spec/log/*.log
 gemfiles/*.lock
+.idea
+.byebug_history
