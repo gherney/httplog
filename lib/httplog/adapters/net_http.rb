@@ -46,7 +46,7 @@ module Net
 
       begin
         orig_connect
-      rescue Net::HTTPError, Timeout::Error => e
+      rescue Timeout::Error => e
         HttpLog.log("Error connecting to #{[@address, @port].compact.join(':')} - #{e.inspect}")
         raise e
       end
