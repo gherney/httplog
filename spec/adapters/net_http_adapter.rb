@@ -27,6 +27,10 @@ class NetHTTPAdapter < HTTPBaseAdapter
     Net::HTTP.new(@host, @port).send(:connect)
   end
 
+  def request_error
+    send_get_request
+  end
+
   def self.native_adapter_class
     Net::HTTP
   end

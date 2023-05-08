@@ -9,7 +9,12 @@ module Net
       url = "http://#{@address}:#{@port}#{req.path}"
 
       bm = Benchmark.realtime do
-        @response = orig_request(req, body, &block)
+        begin
+          @response = orig_request(req, body, &block)
+        rescue Exception => e
+          HttpLog.log("Request error raised #{[@address, @port].compact.join(':')} - #{e.inspect}")
+          raise e
+        end
       end
       body_stream  = req.body_stream
       request_body = if body_stream

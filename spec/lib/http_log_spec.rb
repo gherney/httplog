@@ -419,6 +419,17 @@ describe HttpLog do
           it { is_expected.to include("Error connecting to #{host}:#{port} - #<Timeout::Error: Timeout::Error>") }
         end
       end
+
+      context 'request error' do
+        if adapter_class.method_defined? :request_error
+          before do
+            allow_any_instance_of(adapter_class.native_adapter_class).to receive(:orig_request).and_raise(IOError.new('closed stream'))
+            expect{adapter.request_error}.to raise_error(IOError)
+          end
+          it { is_expected.to include("Connecting: #{host}:#{port}") }
+          it { is_expected.to include("Request error raised #{host}:#{port} - #<IOError: closed stream>") }
+        end
+      end
     end
   end
 end
